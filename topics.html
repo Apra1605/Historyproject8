@@ -203,10 +203,29 @@
       }, 1500);
     });
 
-    // Poverty button navigates to poverty.html
-    const povertyBtn = document.getElementById('povertyBtn');
-    povertyBtn.addEventListener('click', () => {
-      window.location.href = 'poverty.html';
+    // --- Persistent card state ---
+    const cards = [
+      { key: 'poverty', url: 'poverty.html' },
+      { key: 'mmiw', url: 'mmiw.html' },
+      { key: 'climate', url: 'climate.html' },
+      { key: 'assimilation', url: 'assimilation.html' },
+      { key: 'infrastructure', url: 'infrastructure.html' },
+      { key: 'sources', url: 'sources.html' }
+    ];
+
+    const cardButtons = document.querySelectorAll('.grid .card .enter-btn');
+
+    cardButtons.forEach((btn, index) => {
+      const card = cards[index];
+      const stored = localStorage.getItem(card.key) || '0';
+
+      if (stored === '1') btn.textContent = 'Review';
+
+      btn.addEventListener('click', () => {
+        localStorage.setItem(card.key, '1');
+        btn.textContent = 'Review';
+        if (card.url) window.location.href = card.url;
+      });
     });
   </script>
 </body>
