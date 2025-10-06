@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Voices & Lands — Topics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #0f172a;
+      --bg2: #04263b;
+      --accent: #ffb86b;
+      --muted: rgba(255,255,255,0.75);
+      --glass: rgba(255,255,255,0.06);
+      --radius: 14px;
+      color-scheme: dark;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;padding:0}
+    body{
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(255,184,107,0.06), transparent),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:var(--muted);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      padding:40px 20px;
+      overflow-x:hidden; /* scroll vertically allowed */
+    }
+
+    h1{
+      font-family:'Playfair Display',serif;
+      font-weight:700;
+      font-size:clamp(28px,4vw,44px);
+      color:#fff;
+      margin:0 0 10px 0;
+    }
+
+    p.subtitle{
+      margin:0 0 40px 0;
+      font-size:clamp(14px,1.5vw,18px);
+      color:rgba(255,255,255,0.82);
+      text-align:center;
+      max-width:720px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:32px;
+      width:min(1100px,95vw);
+      opacity:0;
+      transform:translateY(20px);
+      transition:opacity 1s ease, transform 1s ease;
+    }
+    .grid.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:0 10px 30px rgba(2,6,23,0.6),0 2px 8px rgba(0,0,0,0.5);
+      backdrop-filter:blur(6px) saturate(120%);
+      border:1px solid rgba(255,255,255,0.04);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:space-between;
+      transition:transform .2s ease,box-shadow .2s ease;
+    }
+
+    .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(8,18,27,0.55)}
+
+    .card img{
+      width:100%;
+      border-radius:12px;
+      height:180px;
+      object-fit:cover;
+      margin-bottom:20px;
+    }
+
+    .card h2{
+      font-family:'Playfair Display',serif;
+      font-weight:700;
+      font-size:20px;
+      color:#fff;
+      text-align:center;
+      margin-bottom:14px;
+    }
+
+    .enter-btn{
+      appearance:none;
+      border:0;
+      background:linear-gradient(135deg,var(--accent),#ff7c4d);
+      padding:14px 22px;
+      border-radius:12px;
+      font-weight:700;
+      font-size:15px;
+      color:#08121b;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(8,18,27,0.45), inset 0 -2px 0 rgba(255,255,255,0.06);
+      transition:transform .18s ease, box-shadow .18s ease, opacity .12s ease;
+      width:100%;
+      max-width:180px;
+    }
+    .enter-btn:hover{transform:translateY(-3px)}
+    .enter-btn:active{transform:translateY(-1px)}
+
+    /* Loader */
+    #loader {
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:linear-gradient(180deg,var(--bg1),var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:50;
+      pointer-events:none;
+      opacity:1;
+      transition:opacity 1s ease;
+    }
+    .spinner {
+      width:80px;
+      height:80px;
+      border:6px solid rgba(255,255,255,0.15);
+      border-top-color:var(--accent);
+      border-radius:50%;
+      animation:spin 1.2s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <h1>Current Challenges</h1>
+  <p class="subtitle">Explore the key issues facing Native American communities today — each deeply connected to history, resilience, and identity.</p>
+
+  <div class="grid" id="topicsGrid">
+    <div class="card">
+      <img src="https://www.nativenowfoundation.org/wp-content/uploads/2014/02/native-american-poverty.jpg" alt="Rural landscape representing poverty and unemployment" />
+      <h2>Poverty and Unemployment</h2>
+      <button class="enter-btn" id="povertyBtn">Start</button>
+    </div>
+
+    <div class="card">
+      <img src="https://ih1.redbubble.net/image.3578751294.9403/flat,750x,075,f-pad,750x1000,f8f8f8.jpg" alt="Missing and Murdered Indigenous Women symbol" />
+      <h2>MMIW</h2>
+      <button class="enter-btn">Start</button>
+    </div>
+
+    <div class="card">
+      <img src="https://media.cnn.com/api/v1/images/stellar/prod/210330105352-restricted-us-climate-crisis-emissions-file.jpg?q=x_2,y_51,h_1123,w_1995,c_crop/w_800" alt="Smoke exiting large factory" />
+      <h2>Climate Crisis</h2>
+      <button class="enter-btn">Start</button>
+    </div>
+
+    <div class="card">
+      <img src="https://allthatsinteresting.com/wordpress/wp-content/uploads/2014/11/US-indian-assimilation-torlino.jpg" alt="Before and after Boarding School Image" />
+      <h2>Assimilation and Cultural Extinction</h2>
+      <button class="enter-btn">Start</button>
+    </div>
+
+    <div class="card">
+      <img src="https://nativeamericanpovertyissue.weebly.com/uploads/4/8/1/8/48184431/197779011.jpg?324" alt="Inadequate infrastructure image" />
+      <h2>Inadequate Infrastructure</h2>
+      <button class="enter-btn">Start</button>
+    </div>
+
+    <div class="card">
+      <img src="https://images.prismic.io/impactio-blog/a777385e-2a43-4e8b-9902-6cff3063e5a8_2022.8.19+-+Understanding+the+Difference+Between+a+Primary+and+a+Secondary+Source.png?auto=compress,format" alt="Sources image" />
+      <h2>Sources</h2>
+      <button class="enter-btn">Start</button>
+    </div>
+  </div>
+
+  <script>
+    // Loader
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('loader');
+      const grid = document.getElementById('topicsGrid');
+
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+          loader.remove();
+          grid.classList.add('visible');
+        }, 1000);
+      }, 1500);
+    });
+
+    // Poverty button navigates to poverty.html
+    const povertyBtn = document.getElementById('povertyBtn');
+    povertyBtn.addEventListener('click', () => {
+      window.location.href = 'poverty.html';
+    });
+  </script>
+</body>
+</html>
