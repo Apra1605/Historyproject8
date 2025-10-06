@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Poverty & Unemployment — Voices & Lands</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.1.1"></script>
+
+<style>
+:root {
+  --bg1:#0f172a;
+  --bg2:#04263b;
+  --accent:#ffb86b;
+  --muted:rgba(255,255,255,0.9);
+  --card-bg: rgba(15,23,42,0.78);
+  --glass: rgba(255,255,255,0.06);
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  font-family:'Inter',system-ui;
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+  color:var(--muted);
+  overflow-x:hidden;
+  scroll-behavior:smooth;
+  height:100%;
+}
+
+/* Slide section base */
+section{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:80px 5%;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Typography */
+h1,h2{ font-family:'Playfair Display',serif; color:#fff; margin-bottom:12px; }
+p{ max-width:720px; line-height:1.6; margin:0 0 20px 0; font-size:1.05rem; color:var(--muted); }
+
+/* Buttons */
+.btn{
+  background:linear-gradient(135deg,var(--accent),#ff7c4d);
+  border:0;border-radius:12px;color:#08121b;
+  padding:12px 18px;font-weight:700;cursor:pointer;
+  box-shadow:0 8px 20px rgba(8,18,27,0.45);
+}
+.btn:focus{ outline:3px solid rgba(255,184,107,0.12); outline-offset:3px; }
+
+/* Layout helpers */
+.wrap{ width:100%; max-width:1200px; display:flex; gap:36px; align-items:center; justify-content:space-between; }
+.text-col{ flex:1; z-index:3; }
+.visual-col{ flex:1; display:flex; align-items:center; justify-content:center; z-index:3; }
+
+/* Chart container: larger & responsive */
+.chart-holder{ width:100%; max-width:920px; height:480px; display:flex; align-items:center; justify-content:center; }
+canvas#incomeChart{ width:100% !important; height:100% !important; border-radius:12px; background:var(--card-bg); padding:12px; }
+
+/* WHO: static background cards arranged evenly and visible */
+.who-bg {
+  position:absolute;
+  inset:0;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  gap:24px;
+  padding:8vh 6%;
+  pointer-events:none;
+}
+.who-card-bg {
+  width:30%;              
+  min-width:220px;
+  height:64vh;
+  background-size:cover;
+  background-position:center;
+  border-radius:12px;
+  box-shadow:0 14px 40px rgba(0,0,0,0.6);
+  filter:brightness(0.86) contrast(0.96);
+  border:1px solid var(--glass);
+}
+
+/* Foreground readable card */
+.text-card{
+  position:relative;
+  z-index:3;
+  background:var(--card-bg);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:36px;
+  border-radius:12px;
+  backdrop-filter:blur(8px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.6);
+  max-width:820px;
+}
+
+/* Explicit text tags alignment — user requested per-tag alignment */
+#chart-title{ text-align:left; }
+#chart-desc{ text-align:left; }
+
+#who-title{ text-align:center; }
+#who-desc{ text-align:center; }
+
+#causes-title{ text-align:right; }
+#causes-desc{ text-align:right; }
+
+#effects-title{ text-align:left; }
+#effects-desc{ text-align:left; }
+
+#solutions-title{ text-align:right; }
+#solutions-desc{ text-align:right; }
+
+/* Responsive stacking */
+@media (max-width:980px){
+  .wrap{ flex-direction:column-reverse; gap:20px; align-items:center; }
+  .who-bg{ display:none; } 
+  .chart-holder{ height:340px; }
+  .who-card-bg{ width:70%; min-width:0; height:45vh; }
+  section{ padding:40px 5%; }
+}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<section id="intro" class="center">
+  <div class="wrap" style="justify-content:center;">
+    <div class="text-col" role="region" aria-label="Topic">
+      <h1 id="topic-title">Poverty & Unemployment</h1>
+      <p id="topic-sub">Click Start to begin your immersive experience.</p>
+      <button class="btn" onclick="scrollToSection('chart')">Start</button>
+    </div>
+  </div>
+</section>
+
+<!-- CHART -->
+<section id="chart" class="left">
+  <div class="wrap" style="align-items:stretch;">
+    <div class="text-col">
+      <h2 id="chart-title">The Problem</h2>
+      <p id="chart-desc"><ul><li>The Indigenous population within the United States consistently faces higher levels of unemployment and poverty relative to other nationalities.</li><br><li>During the Covid-19 pandemic, relief measures were given to people to help them in the crisis, but after the relief measures were taken back, the poverty rate within Native American children doubled compared to what it was before.</li><br><li>The chart shows the average household income for Native Americans compared to the general population. You can hover over certain points to view specific data.</li>
+     <br> <li>Decades worth of underinvestment and broken promises has led to these problems within the Native community.</li></ul></p>
+      <button class="btn" onclick="scrollToSection('causes')">Next: Why is this happening?</button>
+    </div>
+
+    <div class="visual-col">
+      <div class="chart-holder">
+        <canvas id="incomeChart" role="img" aria-label="Income comparison chart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAUSES -->
+<section id="causes" class="right">
+  <div class="wrap">
+    <div class="visual-col" aria-hidden="true">
+      <img src="https://nextgenerationnatives.weebly.com/uploads/3/8/3/5/38355783/reservation-house_orig.jpg" alt="" style="width:600px;border-radius:10px;opacity:0.75">
+    </div>
+
+    <div class="text-col">
+      <h2 id="causes-title">Why does this happen?</h2>
+      <p id="causes-desc"><ul><li>Historically, the causes for the poverty have been the severe land loss due to colonization, the Dawes act losing even more land and destroying communal economies, and the reservation system where the U.S. government controlled all movement, trade, and resources in the land.</li><br>
+      <li>The reservations typically do not have job opportunites due to their desolate location -- miles away from metropolitan areas -- and limited resources.</li><br><li>Native Americans also have one of the lowest graduating rates in the country (less than 50%). This is due to the severe underfunding of the BIE, who are one of the agencies that help with Native American education.</li><br><li>The U.S. government has also not been funding the tribal governments well leading to poor infrastructure and poverty.</li><br><li>Racism in the workplace also deters many from working.</li></ul></p>
+      <div style="text-align:right"><button class="btn" onclick="scrollToSection('who')">Next: Who is this affecting?</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IS AFFECTED -->
+<section id="who" class="center">
+  <div class="who-bg" aria-hidden="true">
+    <div class="who-card-bg" style="background-image:url('https://1.bp.blogspot.com/-HR5r5wfEg5k/XpOKwFBKEfI/AAAAAAAAVwM/8sdEjKzEE2I-tHkyFvAFORzYrBlR7G9RQCLcBGAsYHQ/s1600/Native_American_life_1900s%2B%252838%2529.jpg');"></div>
+    <div class="who-card-bg" style="background-image:url('https://4.bp.blogspot.com/-2eUKOg9PX0w/UqF81oejxiI/AAAAAAAANTs/rInt0S7PZKA/s1600/dec+hot+vint+native+am+Ashishishe.jpg');"></div>
+    <div class="who-card-bg" style="background-image:url('https://i.pinimg.com/736x/07/7a/15/077a151a6ee15201a89650b34f596b65--native-american-girls-american-children.jpg');"></div>
+  </div>
+
+  <div class="text-card" aria-label="Who is affected">
+    <h2 id="who-title">Who Is Affected?</h2>
+    <p id="who-desc">All Native Americans that live on a reservation are affected by this problem. Most of them live in poverty and in sometimes very horrible living conditions by modern standards. </p>
+    <div style="text-align:center"><button class="btn" onclick="scrollToSection('effects')">Next: What does this mean?</button></div>
+  </div>
+</section>
+
+<!-- EFFECTS -->
+<section id="effects" class="left">
+  <div class="wrap">
+    <div class="text-col">
+      <h2 id="effects-title">What does this mean for Native Americans?</h2>
+      <p id="effects-desc">This means that for many Native Americans, economic survival is a daily struggle. It means that opportunities that are readily available for many are very limited or hard to access (good schools, healthcare, and jobs). It means that us all should start petitioning for better schools, healthcare, jobs, economic opportunities, and funding for their tribal governments and reservations so that they can have the same opportunities and services as us.</p>
+      <div style="text-align:left"><button class="btn" onclick="scrollToSection('culture')">Next: American Culture</button></div>
+    </div>
+
+    <div class="visual-col" aria-hidden="true">
+      <img src="https://theintercept.com/wp-content/uploads/2020/07/GettyImages-1224607064-crop.jpg" alt="" style="width:600px;border-radius:10px;opacity:0.75">
+    </div>
+  </div>
+</section>
+
+<!-- CULTURE -->
+<section id="culture" class="right">
+  <div class="wrap">
+    <div class="visual-col" aria-hidden="true">
+      <img src="https://nextgenerationnatives.weebly.com/uploads/3/8/3/5/38355783/reservation-house_orig.jpg" alt="" style="width:600px;border-radius:10px;opacity:0.75">
+    </div>
+
+    <div class="text-col">
+      <h2 id="causes-title">What does this tell us about American Society and Culture?</h2>
+      <p id="causes-desc">This topic shows us how even though equality is one of the U.S’s “core values”, large inequalities still exist in minority communities. Native Americans continue to face higher levels of poverty and unemployment, not because of low effort but because of long standing barriers and neglect from the government and from the general public. It brings forward how there are still large amounts of structural inequality and racism in marginalized communities within the United States. </p>
+      <div style="text-align:right"><button class="btn" onclick="scrollToSection('connection')">Next: Connection</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONNECTION -->
+<section id="connection" class="center">
+  <div class="text-card" aria-label="Who is affected">
+    <h2 id="who-title">The connection to the Columbus Controversy.</h2>
+    <p id="who-desc">The issues of poverty and unemployment are deeply rooted in the legacy of Christopher Columbus. When Columbus arrived to the Americas, his voyages began centuries of land theft, displacement, and theft of resources that left many Native Tribes without the resources that they depend on and in poverty. Columbus represents years of torment and loss of resources for the Native Americans, and that is why there is such a strong argument for abolishing Columbus Day.</p>
+    <div style="text-align:center"><button class="btn" onclick="scrollToSection('solutions')">Next: Solutions</button></div>
+  </div>
+</section>
+
+<!-- SOLUTIONS -->
+<section id="solutions" class="center">
+  <div class="wrap" style="justify-content:flex-end;">
+    <div class="text-card" style="max-width:720px; text-align:right;">
+      <h2 id="solutions-title">Solutions & Progress</h2>
+      <p id="solutions-desc">
+       <ul><li>Increase federal funding for infrastructure in reservations. (more and better schools, closer and better hospitals, etc.)</li><br><li>Help create more jobs INSIDE the reservations so that the Native Americans do not have to travel far. (like the casinos)
+</li><br><li>Scholarships and youth programs to promote education for Native Americans.</li></ul>
+      </p>
+      <div style="text-align:right">
+        <button class="btn" onclick="scrollToSection('intro')">Back to Top</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* Smooth scroll helper */
+function scrollToSection(id){
+  const section = document.getElementById(id);
+  if(section){
+    section.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+/* Chart.js interactive line chart with zoom & pan */
+const ctx = document.getElementById('incomeChart').getContext('2d');
+
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016'],
+    datasets: [
+      {
+        label: 'Native Americans',
+        data: [40959,40198,40913,42157,39583,38595,37554,36914,37752,37745,39066,39719],
+        borderColor: '#ffb86b',
+        backgroundColor: 'rgba(255,184,107,0.06)',
+        borderWidth: 3,
+        pointRadius: 4,
+        pointHoverRadius: 7,
+        tension: 0.36
+      },
+      {
+        label: 'Total U.S. population',
+        data: [56850,57675,58733,57879,56195,55090,53875,53697,53834,54404,56481,57617],
+        borderColor: '#7cc9ff',
+        backgroundColor: 'rgba(124,201,255,0.06)',
+        borderWidth: 3,
+        pointRadius: 4,
+        pointHoverRadius: 7,
+        tension: 0.36
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: '#fff' } },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.85)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        mode: 'index',
+        intersect: false
+      },
+      zoom: {
+        pan: { enabled: true, mode: 'xy', modifierKey: 'ctrl' },
+        zoom: {
+          wheel: { enabled: true },
+          pinch: { enabled: true },
+          drag: { enabled: true },
+          mode: 'xy'
+        }
+      }
+    },
+    interaction: { mode: 'index', intersect: false },
+    scales: {
+      x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.04)' } }
+    },
+    animation: { duration: 700, easing: 'easeOutQuad' }
+  }
+});
+
+// Cursor pointer on chart hover
+document.getElementById('incomeChart').addEventListener('mousemove', (evt) => {
+  const points = chart.getElementsAtEventForMode(evt, 'nearest', {intersect: true}, false);
+  evt.target.style.cursor = points.length ? 'pointer' : 'default';
+});
+
+// Disable animations if user prefers reduced motion
+if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  chart.options.animation = false;
+  chart.update();
+}
+</script>
+</body>
+</html>
