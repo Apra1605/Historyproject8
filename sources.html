@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sources & References</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+body {
+  margin:0;
+  font-family: Inter, sans-serif;
+  background: linear-gradient(180deg,#0f172a,#04263b);
+  color: #fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  overflow:hidden;
+}
+
+h1 {
+  font-size: clamp(28px,5vw,40px);
+  margin-bottom: 30px;
+  text-align:center;
+  opacity: 1;
+  transition: opacity 2s ease;
+}
+
+.message, .quote {
+  font-size: 22px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 2s ease;
+  margin-bottom: 20px;
+  max-width: 90%;
+}
+
+#credits {
+  position:absolute;
+  bottom:-100%;
+  width:100%;
+  text-align:center;
+  font-size:16px;
+  line-height:1.6;
+  white-space: pre-line;
+  opacity: 0;
+}
+
+a {
+  color: #ffb86b;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<h1 id="pageTitle">Sources & References</h1>
+
+<div class="message" id="step1"><h2>Congratulations on completing the experience!<br>Take a moment to reflect on what you've learned.</h2></div>
+<div class="message" id="step2"><h2>Step into the real world and stand up for the communities and causes that need our voices. Always remember,</h2></div>
+<div class="quote" id="step3"><h2>“Things which do not grow and change are dead things.”</h2><br>— Louise Erdrich</div>
+
+<div id="credits">
+ <h2>Works Cited</h2><br>
+AI/an Health Disparities. Beyer, Don. Native American Communities Continue to Face Barriers to Opportunity That Stifle Economic Mobility. Joint Economic Committee Democrats, 10 May 2022.<br>
+“Causes and Risk Factors.” Www.stopvaw.org, www.stopvaw.org/causes_and_risk_factors<br>
+EPA. “Causes of Climate Change.” Www.epa.gov, Environmental Protection Agency, 12 Apr. 2024, www.epa.gov/climatechange-science/causes-climate-change.<br>
+Haslam, Belle. “Unemployment on Native American Reservations.” Ballard Brief, May 2024, ballardbrief.byu.edu/issue-briefs/unemployment-on-native-american-reservations.<br>
+Jr.,Vernon, Brundage. “A Profile of American Indians and Alaska Natives in the U.S. Labor Force : Monthly Labor Review: U.S. Bureau of Labor Statistics.” Www.bls.gov, Nov. 2023, www.bls.gov/opub/mlr/2023/article/a-profile-of-american-indians-and-alaska-natives-in-the-us-labor-force.htm.<br>
+Julian, Paula. “Centering Prevention of Missing and Murdered Indigenous Women | NIWRC.” Www.niwrc.org, www.niwrc.org/restoration-magazine/october-2022/centering-prevention-missing-and-murdered-indigenous-women.<br>
+National Indigenous Women's Resource Center. “Missing and Murdered Indigenous Women and Relatives (MMIWR) | NIWRC.” Www.niwrc.org, 28 Aug. 2024, www.niwrc.org/mmiwr-awareness.<br>
+National Museum of the American Indian. “Native Knowledge 360°—Unlearning Columbus Day Myths: Celebrating Indigenous Peoples’ Day.” Americanindian.si.edu, americanindian.si.edu/nk360/informational/columbus-day-myths.<br>
+“The Indian Health Service Is Chronically Underfunded. Here Is How to Close the Gap.” Forefront Group, 2 Sept. 2025, www.healthaffairs.org/content/forefront/indian-health-service-chronically-underfunded-here-close-gap, https://doi.org/10.1377/forefront.20250827.319208.<br>
+The Red Road. “The Red Road: The Issue of Native American Poverty.” The Red Road, theredroad.org/issues/native-american-poverty/.<br>
+United Nations. “Causes and Effects of Climate Change.” United Nations, 2022, www.un.org/en/climatechange/science/causes-effects-climate-change.<br>
+United States Environmental Protection Agency. “Climate Change and the Health of Indigenous Populations.” Www.epa.gov, 21 Mar. 2022, www.epa.gov/climateimpacts/climate-change-and-health-indigenous-populations.<br>
+Whyatt, Robin . “The Colonial Roots of Violence against Native American Women.” Columbia University’s Mailman School of Public Health, 13 Mar. 2023, www.publichealth.columbia.edu/news/colonial-roots-violence-against-native-american-women.<br><br>
+<b>Extra Resources:</b><br>
+1. Our planning -- <a href="https://docs.google.com/document/d/1vMca3GhPJRqs-I6XSn34NbC_pedkegUC3n6UCysD3Os/edit?usp=sharing" target="_blank">Click me!</a><br>
+2. Sources -- <a href="https://docs.google.com/document/d/1vMca3GhPJRqs-I6XSn34NbC_pedkegUC3n6UCysD3Os/edit?tab=t.gmkts011gwql" target="_blank">Click me!</a>
+Thank you!
+</div>
+
+<p id="customText"></p>
+
+<script>
+// Fade in/out steps
+const pageTitle = document.getElementById("pageTitle");
+const steps = [
+  document.getElementById("step1"),
+  document.getElementById("step2"),
+  document.getElementById("step3")
+];
+
+let stepIndex = 0;
+
+function showNextStep() {
+  if(stepIndex < steps.length){
+    // Hide title on first step
+    if(stepIndex===0) pageTitle.style.opacity = 0;
+
+    const el = steps[stepIndex];
+    el.style.opacity = 1;
+    setTimeout(()=>{
+      el.style.opacity = 0;
+      stepIndex++;
+      setTimeout(showNextStep,1000);
+    },4000);
+  } else {
+    startCredits();
+  }
+}
+
+showNextStep();
+
+// Scroll credits like movie
+function startCredits(){
+  const credits = document.getElementById("credits");
+  credits.style.opacity = 1;
+  let position = -credits.offsetHeight;
+  const scrollSpeed = 0.5; // slower, cinematic
+
+  function scroll(){
+    position += scrollSpeed;
+    credits.style.bottom = position + "px";
+    if(position < window.innerHeight + 50){ // stops just after fully visible
+      requestAnimationFrame(scroll);
+    }
+  }
+  scroll();
+}
+</script>
+</body>
+</html>
