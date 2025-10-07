@@ -1,0 +1,299 @@
+<!doctype html> 
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MMIW — Missing & Murdered Indigenous Women — Voices & Lands</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{
+  --bg1:#0f172a;
+  --bg2:#04263b;
+  --accent:#ffb86b;
+  --muted:rgba(255,255,255,0.88);
+  --card-bg:rgba(15,23,42,0.88);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:Inter,system-ui,Arial,sans-serif;color:var(--muted);background:radial-gradient(1000px 500px at 10% 8%,rgba(255,184,107,0.05),transparent),linear-gradient(180deg,var(--bg1),var(--bg2));overflow:hidden;}
+
+/* Horizontal layout */
+.scroller{
+  display:flex;
+  flex-direction:row;
+  height:100vh;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+}
+.panel{
+  flex:0 0 100%;
+  scroll-snap-align:center;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  text-align:left;
+  padding:3rem;
+  position:relative;
+  background:var(--card-bg);
+  border-radius:16px;
+  transition:transform 0.6s ease, opacity 0.6s ease;
+}
+.panel-content{
+  flex:1;
+  padding:1rem 2rem;
+}
+.panel img, .chart-box{
+  flex:1;
+  max-width:100%;
+  border-radius:12px;
+}
+.panel h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.6rem,3vw,2.5rem);
+  color:#fff;
+  margin-bottom:1rem;
+}
+.panel p{
+  font-size:1.05rem;
+  line-height:1.8;
+  margin-bottom:1rem;
+  color:var(--muted);
+}
+header h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,3vw,3rem);
+  color:#fff;
+  margin-bottom:0.5rem;
+}
+header p{color:rgba(255,255,255,0.75);margin-bottom:1rem;}
+
+/* Buttons */
+.nav-buttons button{
+  position:fixed;
+  top:50%;
+  transform:translateY(-50%);
+  background:linear-gradient(135deg,var(--accent),#ff7c4d);
+  border:none;
+  border-radius:12px;
+  color:#08121b;
+  font-weight:700;
+  width:48px;
+  height:48px;
+  cursor:pointer;
+  box-shadow:0 8px 24px rgba(8,18,27,0.6);
+  transition:transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+  z-index:50;
+}
+.nav-buttons button:hover{transform:scale(1.1);box-shadow:0 12px 28px rgba(8,18,27,0.8);}
+#btnLeft{left:16px;}
+#btnRight{right:16px;}
+
+/* Chart */
+.chart-box{
+  width:100%;
+  max-width:500px;
+  margin-top:0;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:12px;
+  padding:1rem;
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity 1s ease, transform 1s ease;
+}
+.chart-visible{opacity:1;transform:translateY(0);}
+
+/* Finish Button */
+.finish-btn{
+  display:inline-block;
+  margin-top:2rem;
+  padding:0.8rem 1.6rem;
+  font-size:1rem;
+  font-weight:700;
+  color:#08121b;
+  background:linear-gradient(135deg,var(--accent),#ff7c4d);
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  transition:transform 0.2s ease, box-shadow 0.2s ease;
+}
+.finish-btn:hover{transform:scale(1.05);box-shadow:0 8px 20px rgba(255,184,107,0.6);}
+
+/* Fades and parallax */
+.panel:not(.visible){opacity:0.4;transform:scale(0.96);}
+.panel.visible{opacity:1;transform:scale(1);}
+
+/* Responsive */
+@media(max-width:900px){
+  .panel{flex-direction:column;text-align:center;}
+  .panel-content{padding:1rem 0;}
+  .panel img, .chart-box{margin-top:1.5rem;}
+  .nav-buttons button{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="nav-buttons">
+  <button id="btnLeft">‹</button>
+  <button id="btnRight">›</button>
+</div>
+
+<div class="scroller" id="scroller">
+
+  <section class="panel visible" id="panel-0">
+    <div class="panel-content">
+      <header>
+        <h1>MMIW — Missing & Murdered Indigenous Women</h1>
+        <p>Explore the ongoing crisis, its roots, and how communities are fighting for justice.</p>
+      </header>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-1">
+    <div class="panel-content">
+      <h2>What is Happening?</h2>
+      <p><ul><li>Native American women and children face higher levels of domestic violence, dating violence, sexual assault, stalking, sex trafficking, and murder (up to ten times more).</li><br><li>The violence these Native American women expeience is usually commited by non-native men.</li><br><li>84.3 percent of all Native women have experienced violence in their lifetime, most was sexual violence.</li><br><li>MMIW was one of the leading causes of death in Native Women in 2020.</li></ul></p>
+    </div>
+    <div class="chart-box" id="chartBox">
+      <canvas id="mmiwChart" width="400" height="260"></canvas>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-2">
+    <div class="panel-content">
+      <h2>Why is this Happening?</h2>
+      <p><ul><li>Historically, violence against Native Women became a strategy for conquest and genocide, this was because of their ability to sustain the tribe through childbearing.</li><br><li>Racist and Sexist attitudes caused by this history contribute to the violence as the Native women might be percieved as "less value" compared to the rest of society.</li><br><li>“When women can no longer provide food through subsistence agriculture and foraging, they often become factory or migrant workers, increasing the likelihood that they will be victims of sexual assault, sexual harassment, disappearance, or murder” (Stop VAW)</li></ul></p>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-3">
+    <div class="panel-content">
+      <h2>Who is Affected?</h2>
+      <p>All indigenous women and girls are affected by this problem. As shown by the data, they are usually targeted more often and are at a higher risk for violence compared to any woman of a different race</p>
+    </div>
+    <img src="https://i.pinimg.com/originals/98/23/9c/98239c4dcdd9c3321059bfef47aeb1b5.jpg" alt="Affected Community" style="width:350px;border-radius:10px;opacity:0.75;height:550px">
+  </section>
+
+  <section class="panel" id="panel-4">
+    <div class="panel-content">
+      <h2>What Does it Mean for Native Americans?</h2>
+      <p>For Native Americans, MMIW highlights a large, ongoing crisis that shows systemic racism, neglect, and the undervaluing of Native lives. It means constant fear and paranoia for many Native women and girls and devastating loss for the families this has affected. It means living with this systemic injustice, thinking that their lives matter “less” to society (even though that is not true). This calls for more awareness and action in our communities to make sure MMIW cases drastically reduce and so that this injustice is resolved.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-5">
+    <div class="panel-content">
+      <h2>American Culture and Society.</h2>
+      <p>The issue of MMIW shows us that in our society, women face many challenges due to discrimination and being taken advantage of, especially when they are from a minority race. It also further emphasizes the mistreatment that indigenous peoples face daily, while we let it happen without taking any action.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-6">
+    <div class="panel-content">
+      <h2>Connection to Columbus</h2>
+      <p>Columbus marked a new era of European settlement in the New world and the mistreatment of millions of Native Americans. MMIW represents the long term effects of this new era and olden thinking. Native American women and girls continue to be the victims of structural inequalities, broken treaties, and ongoing neglect rooted in centuries of colonization due to Columbus's discovery of the New World and his horrendous actions against the Native people.</p>
+    </div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/Landing_of_Columbus_(2).jpg" alt="Painting: Columbus's Landing" style="width:350px;border-radius:10px;opacity:0.75;height:550px">
+  </section>
+
+  <section class="panel" id="panel-7">
+    <div class="panel-content">
+      <h2>Solutions & Progress</h2>
+      <p><ul><li>Community led initiatives that aim to increase awareness, prevention, and victim support.</li><br><li>“Tribes know best how to respond to violence against women and the federal government must honor and fulfill its trust responsibility to assist Tribes to increase the safety of Native women” (NIWRC)</li><br><li>Strengthen tribal law enforcement (more funding).</li><br><li>Support Services and help services for families who are victim to MMIW.</li></ul></p>
+      <button class="finish-btn" onclick="finishQuiz()">Finish</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const scroller = document.getElementById('scroller');
+const sections = [...document.querySelectorAll('.panel')];
+const btnLeft = document.getElementById('btnLeft');
+const btnRight = document.getElementById('btnRight');
+
+let current = 0;
+function updateButtons(){
+  btnLeft.style.opacity = current===0 ? 0.3 : 1;
+  btnRight.style.opacity = current===sections.length-1 ? 0.3 : 1;
+}
+function showPanel(i){
+  if(i<0 || i>=sections.length) return;
+  current=i;
+  sections[i].scrollIntoView({behavior:'smooth', inline:'center'});
+  sections.forEach(p=>p.classList.remove('visible'));
+  sections[i].classList.add('visible');
+  if(sections[i].id==='panel-1'){document.getElementById('chartBox').classList.add('chart-visible');}
+  updateButtons();
+}
+btnLeft.onclick = ()=> showPanel(current-1);
+btnRight.onclick = ()=> showPanel(current+1);
+window.addEventListener('keydown', e=>{
+  if(e.key==='ArrowLeft') btnLeft.click();
+  if(e.key==='ArrowRight') btnRight.click();
+});
+
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      if(entry.target.id==='panel-1'){document.getElementById('chartBox').classList.add('chart-visible');}
+    }
+  });
+},{threshold:0.5});
+sections.forEach(p=>observer.observe(p));
+
+const ctx=document.getElementById('mmiwChart').getContext('2d');
+new Chart(ctx,{
+  type:'bar',
+  data:{
+    labels:['AI/AN Women','All Women'],
+    datasets:[{
+      label:'Lifetime sexual violence (%)',
+      data:[56.1,18.3],
+      backgroundColor:['rgba(255,184,107,0.9)','rgba(140,200,255,0.9)'],
+      borderColor:['#ffb86b','#8cc8ff'],
+      borderWidth:1
+    }]
+  },
+  options:{
+    plugins:{legend:{display:false}},
+    scales:{
+      y:{beginAtZero:true,max:100,ticks:{color:'#fff',callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.06)'}},
+      x:{ticks:{color:'#fff'},grid:{display:false}}
+    },
+    animation:{duration:1000,easing:'easeOutQuart'}
+  }
+});
+
+</script>
+
+<!-- Final button modal -->
+<div id="quizModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:100;justify-content:center;align-items:center;">
+  <div style="background:var(--card-bg);padding:2rem 3rem;border-radius:16px;text-align:center;max-width:400px;color:var(--muted);">
+    <p style="margin-bottom:1.5rem;font-size:1.1rem;">Do you want to take the quiz?</p>
+    <button onclick="goToQuiz()" style="margin-right:1rem;padding:0.6rem 1.4rem;border-radius:12px;border:none;font-weight:700;background:linear-gradient(135deg,var(--accent),#ff7c4d);cursor:pointer;">Yes</button>
+    <button onclick="goToTopics()" style="padding:0.6rem 1.4rem;border-radius:12px;border:none;font-weight:700;background:#555;cursor:pointer;color:#fff;">No</button>
+  </div>
+</div>
+
+<script>
+// Show modal
+function finishQuiz(){
+  document.getElementById('quizModal').style.display = 'flex';
+}
+
+// Redirect functions
+function goToQuiz(){
+  window.location.href = "mmiwquiz.html";
+}
+function goToTopics(){
+  window.location.href = "topics.html";
+}
+</script>
+
+</body>
+</html>
