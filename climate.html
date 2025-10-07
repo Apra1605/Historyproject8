@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Climate Crisis</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.1.1"></script>
+
+<style>
+:root {
+  --bg1:#0f172a;
+  --bg2:#04263b;
+  --accent:#ffb86b;
+  --muted:rgba(255,255,255,0.9);
+  --card-bg: rgba(15,23,42,0.78);
+  --glass: rgba(255,255,255,0.06);
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  font-family:'Inter',system-ui;
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+  color:var(--muted);
+  overflow-x:hidden;
+  scroll-behavior:smooth;
+  height:100%;
+}
+
+/* Slide section base */
+section{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:80px 5%;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Typography */
+h1,h2{ font-family:'Playfair Display',serif; color:#fff; margin-bottom:12px; }
+p{ max-width:720px; line-height:1.6; margin:0 0 20px 0; font-size:1.05rem; color:var(--muted); }
+
+/* Buttons */
+.btn{
+  background:linear-gradient(135deg,var(--accent),#ff7c4d);
+  border:0;border-radius:12px;color:#08121b;
+  padding:12px 18px;font-weight:700;cursor:pointer;
+  box-shadow:0 8px 20px rgba(8,18,27,0.45);
+}
+.btn:focus{ outline:3px solid rgba(255,184,107,0.12); outline-offset:3px; }
+
+/* Layout helpers */
+.wrap{ width:100%; max-width:1200px; display:flex; gap:36px; align-items:center; justify-content:space-between; }
+.text-col{ flex:1; z-index:3; }
+.visual-col{ flex:1; display:flex; align-items:center; justify-content:center; z-index:3; }
+
+/* Chart container: larger & responsive */
+.chart-holder{ width:100%; max-width:920px; height:480px; display:flex; align-items:center; justify-content:center; }
+canvas#incomeChart{ width:100% !important; height:100% !important; border-radius:12px; background:var(--card-bg); padding:12px; }
+
+/* WHO: static background cards arranged evenly and visible */
+.who-bg {
+  position:absolute;
+  inset:0;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  gap:24px;
+  padding:8vh 6%;
+  pointer-events:none;
+}
+.who-card-bg {
+  width:30%;              
+  min-width:220px;
+  height:64vh;
+  background-size:cover;
+  background-position:center;
+  border-radius:12px;
+  box-shadow:0 14px 40px rgba(0,0,0,0.6);
+  filter:brightness(0.86) contrast(0.96);
+  border:1px solid var(--glass);
+}
+
+/* Foreground readable card */
+.text-card{
+  position:relative;
+  z-index:3;
+  background:var(--card-bg);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:36px;
+  border-radius:12px;
+  backdrop-filter:blur(8px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.6);
+  max-width:820px;
+}
+
+/* Explicit text tags alignment — user requested per-tag alignment */
+#chart-title{ text-align:left; }
+#chart-desc{ text-align:left; }
+
+#who-title{ text-align:center; }
+#who-desc{ text-align:center; }
+
+#causes-title{ text-align:right; }
+#causes-desc{ text-align:right; }
+
+#effects-title{ text-align:left; }
+#effects-desc{ text-align:left; }
+
+#solutions-title{ text-align:right; }
+#solutions-desc{ text-align:right; }
+
+/* Responsive stacking */
+@media (max-width:980px){
+  .wrap{ flex-direction:column-reverse; gap:20px; align-items:center; }
+  .who-bg{ display:none; } 
+  .chart-holder{ height:340px; }
+  .who-card-bg{ width:70%; min-width:0; height:45vh; }
+  section{ padding:40px 5%; }
+}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<section id="intro" class="center">
+  <div class="wrap" style="justify-content:center;">
+    <div class="text-col" role="region" aria-label="Topic">
+      <h1 id="topic-title">Climate Crisis</h1>
+      <p id="topic-sub">Click Start to begin your immersive experience.</p>
+      <button class="btn" onclick="scrollToSection('chart')">Start</button>
+    </div>
+  </div>
+</section>
+
+<!-- CHART -->
+<section id="chart" class="left">
+  <div class="wrap" style="align-items:stretch;">
+    <div class="text-col">
+      <h2 id="chart-title">The Problem</h2>
+      <p id="chart-desc"><ul><li>Climate change caused by humans has negatively affected Native American reservations in many different ways, like damage to land and access to resources.</li><br><li>Since Native Americans have less infrastructure and economical development, they are less prepared for events like these.</li><br><li>The chart shows the average amount of temperature rise experienced in Native American reservations per year, along with how many Native tribes find it difficult to find water per year.</li>
+     <br> <li>Native Americans already experience trauma and PTSD from the loss of land, population, and resources. Climate change does not help, as it negatively impacts many natural areas of land, forcing tribes to migrate.</li></ul></p>
+      <button class="btn" onclick="scrollToSection('causes')">Next: Why is this happening?</button>
+    </div>
+
+    <div class="visual-col">
+      <div class="chart-holder">
+        <canvas id="incomeChart" role="img" aria-label="Income comparison chart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAUSES -->
+<section id="causes" class="right">
+  <div class="wrap">
+    <div class="visual-col" aria-hidden="true">
+      <img src="https://nextgenerationnatives.weebly.com/uploads/3/8/3/5/38355783/reservation-house_orig.jpg" alt="" style="width:600px;border-radius:10px;opacity:0.75">
+    </div>
+
+    <div class="text-col">
+      <h2 id="causes-title">Why does this happen?</h2>
+      <p id="causes-desc"><ul><li>Every year, humans release more and more carbon emissions into the atmosphere. This comes from a variety of sources, like gas-powered cars, factories, and burning fossil fuels for energy.</li><br>
+      <li>When Columbus invaded the American continent, he pushed the Natives to vulnerable pieces of land subject to damage from climate change.</li><br><li>Most Americans today do not respect Native American boundaries, leading to even more damage to their land and resources.</li><br><li>The U.S. government does not work well with the Native Americans when it comes to creating laws and strategies against climate change.</li><br><li>Racism in the workplace also deters many from working.</li></ul></p>
+      <div style="text-align:right"><button class="btn" onclick="scrollToSection('who')">Next: Who is this affecting?</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IS AFFECTED -->
+<section id="who" class="center">
+  <div class="who-bg" aria-hidden="true">
+    <div class="who-card-bg" style="background-image:url('https://1.bp.blogspot.com/-HR5r5wfEg5k/XpOKwFBKEfI/AAAAAAAAVwM/8sdEjKzEE2I-tHkyFvAFORzYrBlR7G9RQCLcBGAsYHQ/s1600/Native_American_life_1900s%2B%252838%2529.jpg');"></div>
+    <div class="who-card-bg" style="background-image:url('https://4.bp.blogspot.com/-2eUKOg9PX0w/UqF81oejxiI/AAAAAAAANTs/rInt0S7PZKA/s1600/dec+hot+vint+native+am+Ashishishe.jpg');"></div>
+    <div class="who-card-bg" style="background-image:url('https://i.pinimg.com/736x/07/7a/15/077a151a6ee15201a89650b34f596b65--native-american-girls-american-children.jpg');"></div>
+  </div>
+
+  <div class="text-card" aria-label="Who is affected">
+    <h2 id="who-title">Who Is Affected?</h2>
+    <p id="who-desc">All Native Americans that live on a reservation are affected by this problem. While climate change affects the entire world, Native Americans are more vulnerable due to their underdevelopment infrastructurally and economically. </p>
+    <div style="text-align:center"><button class="btn" onclick="scrollToSection('effects')">Next: What does this mean?</button></div>
+  </div>
+</section>
+
+<!-- EFFECTS -->
+<section id="effects" class="left">
+  <div class="wrap">
+    <div class="text-col">
+      <h2 id="effects-title">What does this mean for Native Americans?</h2>
+      <p id="effects-desc">Due to the climate crisis facing Native Americans, many tribes have insufficient access to basic resources like water. Additionally, it continuously damages the already limited land provided to them, forcing them to repeatedly migrate until they have nowhere left. In essence, this lowers the quality of life that Native Americans experience, and it calls for urgent action.</p>
+      <div style="text-align:left"><button class="btn" onclick="scrollToSection('culture')">Next: American Culture</button></div>
+    </div>
+
+    <div class="visual-col" aria-hidden="true">
+      <img src="https://theintercept.com/wp-content/uploads/2020/07/GettyImages-1224607064-crop.jpg" alt="" style="width:600px;border-radius:10px;opacity:0.75">
+    </div>
+  </div>
+</section>
+
+<!-- CULTURE -->
+<section id="culture" class="right">
+  <div class="wrap">
+    <div class="visual-col" aria-hidden="true">
+      <img src="https://nextgenerationnatives.weebly.com/uploads/3/8/3/5/38355783/reservation-house_orig.jpg" alt="" style="width:600px;border-radius:10px;opacity:0.75">
+    </div>
+
+    <div class="text-col">
+      <h2 id="causes-title">What does this tell us about American Society and Culture?</h2>
+      <p id="causes-desc">This issue tells us that our society is already extremely polluted and affected by climate change. However, considering that Native Americans are frequently provided the worst land available, the climate crisis affects them more, and shows that we do not care about others getting a good quality of life, as long as we do. </p>
+      <div style="text-align:right"><button class="btn" onclick="scrollToSection('connection')">Next: Connection</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONNECTION -->
+<section id="connection" class="center">
+  <div class="text-card" aria-label="Who is affected">
+    <h2 id="who-title">The connection to the Columbus Controversy.</h2>
+    <p id="who-desc">Before Christopher Columbus invaded and forced European ways upon the Native Americans, they had extremely ecologically friendly ways of doing daily tasks. However, as time went on, those ways were dismissed for earth-damaging methods to cook, manufacture, and travel. Additionally, Columbus forced Natives to pieces of land vulnerable to climate change, making it all the more worse for Native Americans compared to other populations in America.</p>
+    <div style="text-align:center"><button class="btn" onclick="scrollToSection('solutions')">Next: Solutions</button></div>
+  </div>
+</section>
+
+<!-- SOLUTIONS -->
+<section id="solutions" class="center">
+  <div class="wrap" style="justify-content:flex-end;">
+    <div class="text-card" style="max-width:720px; text-align:right;">
+      <h2 id="solutions-title">Solutions & Progress</h2>
+      <p id="solutions-desc">
+       <ul><li>If we choose to divert to traditional Native American ways of life, we would be emitting a lot less carbon into the atmosphere.</li><br><li>Governments could meet up with tribal leaders to brainstorm strategies to prevent climate change.
+</li><br><li>Day-to-day citizens could respect Native American boundaries to make life easier for them.</li></ul>
+      </p>
+      <div style="text-align:right">
+        <button class="btn" onclick="openVideoPopup()">Watch Finale Video</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* Smooth scroll helper */
+function scrollToSection(id){
+  const section = document.getElementById(id);
+  if(section){
+    section.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+/* Chart.js interactive combo chart with zoom & pan */
+const ctx = document.getElementById('incomeChart').getContext('2d');
+
+const chart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['2020','2021','2022','2023','2024','2025'],
+    datasets: [
+      {
+        label: 'Average Temperature Rise (°F)',
+        data: [1.2, 1.5, 1.7, 1.9, 2.1, 2.3],
+        borderColor: '#ffb86b',
+        backgroundColor: 'rgba(255,184,107,0.3)',
+        borderWidth: 3,
+        type: 'line',
+        yAxisID: 'y1',
+        tension: 0.4,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+      },
+      {
+        label: 'Water Scarcity (% of Tribes)',
+        data: [38, 42, 45, 48, 51, 55],
+        backgroundColor: 'rgba(124,201,255,0.4)',
+        borderColor: '#7cc9ff',
+        borderWidth: 2,
+        yAxisID: 'y2',
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: '#fff' } },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.85)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        mode: 'index',
+        intersect: false
+      },
+      zoom: {
+        pan: { enabled: true, mode: 'xy', modifierKey: 'ctrl' },
+        zoom: {
+          wheel: { enabled: true },
+          pinch: { enabled: true },
+          drag: { enabled: true },
+          mode: 'xy'
+        }
+      }
+    },
+    interaction: { mode: 'index', intersect: false },
+    scales: {
+      x: {
+        ticks: { color: '#fff' },
+        grid: { color: 'rgba(255,255,255,0.04)' }
+      },
+      y1: {
+        position: 'left',
+        title: { display: true, text: 'Temperature Rise (°F)', color: '#ffb86b' },
+        ticks: { color: '#ffb86b' },
+        grid: { color: 'rgba(255,255,255,0.04)' },
+        beginAtZero: true
+      },
+      y2: {
+        position: 'right',
+        title: { display: true, text: 'Water Scarcity (%)', color: '#7cc9ff' },
+        ticks: { color: '#7cc9ff' },
+        grid: { drawOnChartArea: false },
+        beginAtZero: true,
+        max: 60
+      }
+    },
+    animation: { duration: 700, easing: 'easeOutQuad' }
+  }
+});
+
+// Cursor pointer on chart hover
+document.getElementById('incomeChart').addEventListener('mousemove', (evt) => {
+  const points = chart.getElementsAtEventForMode(evt, 'nearest', {intersect: true}, false);
+  evt.target.style.cursor = points.length ? 'pointer' : 'default';
+});
+
+// Disable animations if user prefers reduced motion
+if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  chart.options.animation = false;
+  chart.update();
+}
+</script>
+
+<!-- Video Popup Modal -->
+<div id="videoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:1000;">
+  <div style="position:relative; width:80%; max-width:800px; background:#000; border-radius:12px; padding:20px; display:flex; flex-direction:column; align-items:center; box-shadow:0 0 30px rgba(255,184,107,0.5);">
+    <video id="topicVideo" width="100%" controls>
+      <source src="https://firebasestorage.googleapis.com/v0/b/the-legend-of-the-dungeon.appspot.com/o/povertyvid.mp4?alt=media&token=8a75bf5f-7cd9-4129-b4ff-7a6cc9bd2e71" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+
+    <!-- Orange Progress Bar -->
+    <progress id="videoProgress" value="0" max="100" style="width:100%; height:10px; border-radius:6px; overflow:hidden; background:rgba(255,255,255,0.1); margin-top:10px;"></progress>
+
+    <button id="quizBtn" style="display:none; margin-top:20px; padding:12px 20px; border:none; border-radius:8px; background:var(--accent); font-weight:700; cursor:pointer;">Take Additional Quiz</button>
+    <button id="closeVideoBtn" style="position:absolute; top:10px; right:10px; background:red; color:#fff; border:none; border-radius:50%; width:30px; height:30px; font-weight:bold; cursor:pointer;">×</button>
+  </div>
+</div>
+
+<!-- Additional Quiz Confirmation Modal -->
+<div id="quizModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:1100;">
+  <div style="background:#111; padding:30px; border-radius:14px; text-align:center; max-width:400px;">
+    <h2 style="color:#fff; margin-bottom:20px;">Take Additional Quiz?</h2>
+    <button id="yesQuiz" style="margin:0 10px; padding:12px 20px; border:none; border-radius:8px; background:var(--accent); font-weight:700; cursor:pointer;">Yes, take</button>
+    <button id="noQuiz" style="margin:0 10px; padding:12px 20px; border:none; border-radius:8px; background:#555; color:#fff; font-weight:700; cursor:pointer;">No, do not take</button>
+  </div>
+</div>
+
+<!-- Custom Progress Bar Styling -->
+<style>
+  progress::-webkit-progress-value {
+    background-color: #ffb86b;
+  }
+  progress::-moz-progress-bar {
+    background-color: #ffb86b;
+  }
+</style>
+
+<script>
+  // Function to open the video popup
+  function openVideoPopup() {
+    document.getElementById('videoModal').style.display = 'flex';
+    const video = document.getElementById('topicVideo');
+    const quizBtn = document.getElementById('quizBtn');
+    const progress = document.getElementById('videoProgress');
+
+    video.currentTime = 0;
+    video.play();
+
+    video.onended = () => {
+      quizBtn.style.display = 'inline-block';
+    };
+
+    video.addEventListener('timeupdate', () => {
+      if (video.duration) {
+        progress.value = (video.currentTime / video.duration) * 100;
+      }
+    });
+  }
+
+  // Close video modal
+  document.getElementById('closeVideoBtn').addEventListener('click', () => {
+    document.getElementById('videoModal').style.display = 'none';
+  });
+
+  // Show quiz confirmation modal
+  document.getElementById('quizBtn').addEventListener('click', () => {
+    document.getElementById('videoModal').style.display = 'none';
+    document.getElementById('quizModal').style.display = 'flex';
+  });
+
+  // Quiz modal buttons
+  document.getElementById('yesQuiz').addEventListener('click', () => {
+    window.location.href = 'povquiz.html';
+  });
+
+  document.getElementById('noQuiz').addEventListener('click', () => {
+    window.location.href = 'topics.html';
+  });
+
+  // Trigger video popup from Poverty card
+  document.getElementById('povertyBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    openVideoPopup();
+  });
+</script>
+
+</body>
+</html>
+
