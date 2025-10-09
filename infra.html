@@ -1,0 +1,317 @@
+<!doctype html> 
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MMIW — Missing & Murdered Indigenous Women — Voices & Lands</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{
+  --bg1:#0f172a;
+  --bg2:#04263b;
+  --accent:#ffb86b;
+  --muted:rgba(255,255,255,0.88);
+  --card-bg:rgba(15,23,42,0.88);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:Inter,system-ui,Arial,sans-serif;color:var(--muted);background:radial-gradient(1000px 500px at 10% 8%,rgba(255,184,107,0.05),transparent),linear-gradient(180deg,var(--bg1),var(--bg2));overflow:hidden;}
+
+/* Horizontal layout */
+.scroller{
+  display:flex;
+  flex-direction:row;
+  height:100vh;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+}
+.panel{
+  flex:0 0 100%;
+  scroll-snap-align:center;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  text-align:left;
+  padding:3rem;
+  position:relative;
+  background:var(--card-bg);
+  border-radius:16px;
+  transition:transform 0.6s ease, opacity 0.6s ease;
+}
+.panel-content{
+  flex:1;
+  padding:1rem 2rem;
+}
+.panel img, .chart-box{
+  flex:1;
+  max-width:100%;
+  border-radius:12px;
+}
+.panel h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.6rem,3vw,2.5rem);
+  color:#fff;
+  margin-bottom:1rem;
+}
+.panel p{
+  font-size:1.05rem;
+  line-height:1.8;
+  margin-bottom:1rem;
+  color:var(--muted);
+}
+header h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,3vw,3rem);
+  color:#fff;
+  margin-bottom:0.5rem;
+}
+header p{color:rgba(255,255,255,0.75);margin-bottom:1rem;}
+
+/* Buttons */
+.nav-buttons button{
+  position:fixed;
+  top:50%;
+  transform:translateY(-50%);
+  background:linear-gradient(135deg,var(--accent),#ff7c4d);
+  border:none;
+  border-radius:12px;
+  color:#08121b;
+  font-weight:700;
+  width:48px;
+  height:48px;
+  cursor:pointer;
+  box-shadow:0 8px 24px rgba(8,18,27,0.6);
+  transition:transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+  z-index:50;
+}
+.nav-buttons button:hover{transform:scale(1.1);box-shadow:0 12px 28px rgba(8,18,27,0.8);}
+#btnLeft{left:16px;}
+#btnRight{right:16px;}
+
+/* Chart */
+.chart-box{
+  width:100%;
+  max-width:500px;
+  margin-top:0;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:12px;
+  padding:1rem;
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity 1s ease, transform 1s ease;
+}
+.chart-visible{opacity:1;transform:translateY(0);}
+
+/* Finish Button */
+.finish-btn{
+  display:inline-block;
+  margin-top:2rem;
+  padding:0.8rem 1.6rem;
+  font-size:1rem;
+  font-weight:700;
+  color:#08121b;
+  background:linear-gradient(135deg,var(--accent),#ff7c4d);
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  transition:transform 0.2s ease, box-shadow 0.2s ease;
+}
+.finish-btn:hover{transform:scale(1.05);box-shadow:0 8px 20px rgba(255,184,107,0.6);}
+
+/* Fades and parallax */
+.panel:not(.visible){opacity:0.4;transform:scale(0.96);}
+.panel.visible{opacity:1;transform:scale(1);}
+
+/* Responsive */
+@media(max-width:900px){
+  .panel{flex-direction:column;text-align:center;}
+  .panel-content{padding:1rem 0;}
+  .panel img, .chart-box{margin-top:1.5rem;}
+  .nav-buttons button{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="nav-buttons">
+  <button id="btnLeft">‹</button>
+  <button id="btnRight">›</button>
+</div>
+
+<div class="scroller" id="scroller">
+
+  <section class="panel visible" id="panel-0">
+    <div class="panel-content">
+      <header>
+        <h1>Native American Infrastructure</h1>
+        <p>Explore how Native American reservations have generally poorer infrastructure than outside and why.</p>
+      </header>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-1">
+    <div class="panel-content">
+      <h2>What is Happening?</h2>
+      <p><ul><li>Native Americans are finding it increasingly difficult to get access to safe, healthy drinking water in their houses.
+</li><br><li>In Native American reservations, the majority of the roads — sixty percent to be exact — are made out of earth and gravel, not concrete.
+</li><br><li>Native American reservations have three to six times more overcrowded homes than the United States as a whole.
+</li><br><li>Native Americans have limited access to medical services because of their desolate location.
+</li></ul></p>
+    </div>
+    <div class="chart-box" id="chartBox">
+      <canvas id="mmiwChart" width="400" height="260"></canvas>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-2">
+    <div class="panel-content">
+      <h2>Why is this Happening?</h2>
+      <p><ul><li>Historically, the reason for this would be because of the United States not keeping up to the promises it made in it's treaties. (especially for money).</li><br><li>The Indian Health Service is incredibly underfunded, which leads to poor facilities and outdated equipment.</li><br><li>IHS clinics are distant from reservations, causing large journeys to get to them.
+</li><br><li>Native Americans tend to have lower income rates due to poor education and other reasons, which leads to a worse economy.</li><br><li>Racism against Native Americans also contributes to the struggle.</li></ul></p>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-3">
+    <div class="panel-content">
+      <h2>Who is Affected?</h2>
+      <p>All Native Americans living on a reservation are affected by this issue as they are the ones actively using the infrastructure every day.</p>
+    </div>
+    <img src="https://blog.glaciermt.com/wp-content/uploads/2022/11/IT5A0689-1024x683.jpg" alt="Affected Community" style="width:350px;border-radius:10px;opacity:0.75;height:550px">
+  </section>
+
+  <section class="panel" id="panel-4">
+    <div class="panel-content">
+      <h2>What Does it Mean for Native Americans?</h2>
+      <p>It means that unless the United States government funds more agencies and organizations that help native american reservations (IHS, BIE) then Native American reservations will continue to stay in its state of bad infrastructure and poverty. It means that the general population and Native Americans need to push for changes in these reservations. It means that Native Americans are not getting proper healthcare, education, insurance, and many other services that many Americans depend on.
+</p>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-5">
+    <div class="panel-content">
+      <h2>American Culture and Society.</h2>
+      <p>It shows us how we as a society are allowing such inequalities to go because we are being negligent towards what is happening in those enclosed spaces. It shows how our media does not air many of these issues unless it is an absolute crisis that gets clicks and interaction. It tests the core values on which the U.S. was built upon.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-6">
+    <div class="panel-content">
+      <h2>Connection to Columbus</h2>
+      <p>Columbus marked a new era where Native Americans were relocated to resource-poor reservations with limited access to many things. He also disrupted the tribal governments who were taking care of it before. Overall, he started a mindset and system which prioritized settlers over the Native Americans -- which is still going on today.</p>
+    </div>
+    <img src="https://i.pinimg.com/originals/7f/cd/a5/7fcda57854a3ff94f45bf3fb59c6f67d.jpg" alt="Painting: Columbus's Landing" style="width:350px;border-radius:10px;opacity:0.75;height:550px">
+  </section>
+
+  <section class="panel" id="panel-7">
+    <div class="panel-content">
+      <h2>Solutions & Progress</h2>
+      <p><ul><li>Community led initiatives that aim to increase the public awareness of this issue.</li><br><li>Petition the government to fund the IHS and other agencies that contribute to recovering infrastructure in the reservations.</li><br><li>Native Americans getting spots in the United States government and Congress would help them speak out for what they need, in the very place they can get it.</li></ul></p>
+      <button class="finish-btn" onclick="finishQuiz()">Finish</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const scroller = document.getElementById('scroller');
+const sections = [...document.querySelectorAll('.panel')];
+const btnLeft = document.getElementById('btnLeft');
+const btnRight = document.getElementById('btnRight');
+
+let current = 0;
+function updateButtons(){
+  btnLeft.style.opacity = current===0 ? 0.3 : 1;
+  btnRight.style.opacity = current===sections.length-1 ? 0.3 : 1;
+}
+function showPanel(i){
+  if(i<0 || i>=sections.length) return;
+  current=i;
+  sections[i].scrollIntoView({behavior:'smooth', inline:'center'});
+  sections.forEach(p=>p.classList.remove('visible'));
+  sections[i].classList.add('visible');
+  if(sections[i].id==='panel-1'){document.getElementById('chartBox').classList.add('chart-visible');}
+  updateButtons();
+}
+btnLeft.onclick = ()=> showPanel(current-1);
+btnRight.onclick = ()=> showPanel(current+1);
+window.addEventListener('keydown', e=>{
+  if(e.key==='ArrowLeft') btnLeft.click();
+  if(e.key==='ArrowRight') btnRight.click();
+});
+
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      if(entry.target.id==='panel-1'){document.getElementById('chartBox').classList.add('chart-visible');}
+    }
+  });
+},{threshold:0.5});
+sections.forEach(p=>observer.observe(p));
+
+// NEW CHART (unpaved roads)
+const ctx=document.getElementById('mmiwChart').getContext('2d');
+new Chart(ctx,{
+  type:'line',
+  data:{
+    labels:['2010','2015','2020','2025'],
+    datasets:[
+      {
+        label:'Tribal %',
+        data:[65,63,60,58],
+        borderColor:'#ffb86b',
+        backgroundColor:'rgba(255,184,107,0.2)',
+        fill:true,
+        tension:0.4,
+        pointRadius:5,
+        pointHoverRadius:7
+      },
+      {
+        label:'National %',
+        data:[10,9,8,7],
+        borderColor:'#8cc8ff',
+        backgroundColor:'rgba(140,200,255,0.15)',
+        fill:true,
+        tension:0.4,
+        pointRadius:5,
+        pointHoverRadius:7
+      }
+    ]
+  },
+  options:{
+    plugins:{legend:{labels:{color:'#fff'}}},
+    scales:{
+      y:{beginAtZero:true,max:70,ticks:{color:'#fff',callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.06)'}},
+      x:{ticks:{color:'#fff'},grid:{display:false}}
+    },
+    animation:{duration:1200,easing:'easeOutQuart'}
+  }
+});
+</script>
+
+<!-- Final button modal -->
+<div id="quizModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:100;justify-content:center;align-items:center;">
+  <div style="background:var(--card-bg);padding:2rem 3rem;border-radius:16px;text-align:center;max-width:400px;color:var(--muted);">
+    <p style="margin-bottom:1.5rem;font-size:1.1rem;">Do you want to take the quiz?</p>
+    <button onclick="goToQuiz()" style="margin-right:1rem;padding:0.6rem 1.4rem;border-radius:12px;border:none;font-weight:700;background:linear-gradient(135deg,var(--accent),#ff7c4d);cursor:pointer;">Yes</button>
+    <button onclick="goToTopics()" style="padding:0.6rem 1.4rem;border-radius:12px;border:none;font-weight:700;background:#555;cursor:pointer;color:#fff;">No</button>
+  </div>
+</div>
+
+<script>
+function finishQuiz(){
+  document.getElementById('quizModal').style.display = 'flex';
+}
+function goToQuiz(){
+  window.location.href = "infraquiz.html";
+}
+function goToTopics(){
+  window.location.href = "topics.html";
+}
+</script>
+
+</body>
+</html>
